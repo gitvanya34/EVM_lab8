@@ -11,68 +11,45 @@ int main()
    
     double  x = 1,r0;
     __asm
+   
     { 
-        mov ax,2//ранг факториала
-        mov bx,2
-        fldz
-        FXCH st(3) //для суммы ряда
-Main:  
-        mov cx,0
         fld1
-Degree:
+        fld1
+        fld1
+        fld1
+        mov ax,1//ранг факториала
+Main:  
+    mov cx,0  
+        Degree:
         inc cx
         fld x
         fmul
-        cmp cx, bx
+        cmp cx,ax
             jl Degree
-        FXCH st(3)
-        jmp Factorial
-Factorial:
-        mov cx, 0 
-        ffree st(0)//очистка лишних данных
-        ffree st(1)
-        ffree st(2)
-        fadd
-        fadd    
-        fld1
-        fld1    
-Fact:
-        fmul  st(1), st(0)
-        fld1
-        fadd 
-        inc cx
-        cmp cx,ax        
-            jl Fact
-        jmp MainExit
-MainExit:
-    /////////  деление степени на факториал 
-        fxch st(1)
-        fdiv st(3), st(0)
-        fxch st(3)
-    /////////////сумма ряда
-        fadd st(4),st(0)
-        fxch st(3)
-        ffree st(0)//удаляем лишние значения и сдвигаем промежутки ???
-        ffree st(1)
-        fadd
-        cmp ax, 20 //максимальный ранг факториала ранг факториала(точность)
-            je Exit
-        inc ax
-        inc bx
-        jmp Main
-Exit:    
-        fld1
-        fld x
-        fadd 
-        fadd st(0), st(4)
-
-        fstp r0
+    ////факториал
+    fxch st(2)
+    fmul st(1), st(0)
+    fxch st(2)
+    //сумма ряда 
+    fdiv st(0),st(1)
+    fadd st(3), st(0)
+    //зануление степени 
+    fldz
+    fmul
+    fld1
+    fadd 
+    fadd st(2),st(0)//текущий ранг факториала
+    cmp ax, 20 //максимальная степень
+        je Exit
+    inc ax
+    jmp Main
+Exit:
+       fxch st(3)
+        fstp r0   
     }
- 
     cout.precision(15);
-  
-
     cout <<"e^"<<x<<":\t"<<r0 << endl;
+   
    
     //cout <<"\t"<< a9 << endl;
 
