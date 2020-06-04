@@ -9,47 +9,52 @@ using namespace std;
 int main()
 {
    
-    double  x = 1,r0;
-    __asm
-   
-    { 
-        fld1
-        fld1
-        fld1
-        fld1
-        mov ax,1//ранг факториала
-Main:  
-    mov cx,0  
-        Degree:
-        inc cx
-        fld x
-        fmul
-        cmp cx,ax
-            jl Degree
-    ////факториал
-    fxch st(2)
-    fmul st(1), st(0)
-    fxch st(2)
-    //сумма ряда 
-    fdiv st(0),st(1)
-    fadd st(3), st(0)
-    //зануление степени 
-    fldz
-    fmul
-    fld1
-    fadd 
-    fadd st(2),st(0)//текущий ранг факториала
-    cmp ax, 20 //максимальная степень
-        je Exit
-    inc ax
-    jmp Main
-Exit:
-       fxch st(3)
-        fstp r0   
+    double  x = 0,r0;
+    for (x = 0; x < 5; x++)
+    {
+        __asm
+
+        {
+            fld1
+            fld1
+            fld1
+            fld1
+            mov ax, 1//ранг факториала
+            Main:
+            mov cx, 0
+                Degree :
+                inc cx
+                fld x
+                fmul
+                cmp cx, ax
+                jl Degree
+                ////факториал
+                fxch st(2)
+                fmul st(1), st(0)
+                fxch st(2)
+                //сумма ряда 
+                fdiv st(0), st(1)
+                fadd st(3), st(0)
+                //зануление степени 
+                fldz
+                fmul
+                fld1
+                fadd
+                fadd st(2), st(0)//текущий ранг факториала
+                cmp ax, 20 //максимальная степень
+                je Exit
+                inc ax
+                jmp Main
+                Exit :
+            fxch st(3)
+                fstp r0
+                emms
+        }
+        cout.precision(15);
+        cout << "(A)e^" << x << ":\t" << r0 << endl;
+        cout << "(M)e^" << x << ":\t" << exp(x) << endl<<endl;
+      
     }
-    cout.precision(15);
-    cout <<"e^"<<x<<":\t"<<r0 << endl;
-   
    
     //cout <<"\t"<< a9 << endl;
 
